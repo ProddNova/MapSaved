@@ -1,0 +1,29 @@
+:root { font-family: Inter, system-ui, sans-serif; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #0f141e; color: #f3f4f6; }
+header { padding: 14px 16px 8px; }
+header h1 { margin: 0 0 4px; }
+header p { margin: 0; opacity: .8; font-size: .9rem; }
+main { padding: 0 12px 16px; display: grid; gap: 10px; }
+.controls { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.controls input, .controls select, .controls button { padding: 10px; border-radius: 10px; border: 1px solid #324054; background:#192333; color:inherit; }
+#map { height: 45vh; border-radius: 12px; overflow: hidden; }
+#list { display: grid; gap: 8px; }
+.card { background: #192333; border: 1px solid #304056; border-radius: 12px; padding: 10px; }
+.card h3 { margin: 0 0 8px; }
+.meta { font-size: .85rem; opacity: .85; }
+.actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.actions button, .actions a { border: 1px solid #3f526e; background: #26364d; color: #fff; padding: 6px 8px; border-radius: 8px; text-decoration: none; font-size: .85rem; }
+dialog { border: none; border-radius: 12px; width: min(96vw, 560px); background: #111a2a; color:#fff; }
+#placeForm { display: grid; gap: 8px; }
+label { display: grid; gap: 4px; font-size: .9rem; }
+input, textarea, select { padding: 9px; border-radius: 8px; border: 1px solid #324054; background:#1b2638; color:#fff; }
+textarea { min-height: 68px; }
+fieldset { border: 1px solid #324054; border-radius: 10px; display:grid; gap:8px; }
+.coords { display:grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+menu { display:flex; justify-content:flex-end; gap:8px; margin:0; padding:0; }
+@media (min-width: 840px) {
+  main { grid-template-columns: 1.1fr .9fr; }
+  #map { height: 76vh; }
+  .controls { grid-column: 1 / -1; grid-template-columns: 1fr 160px 140px; }
+}

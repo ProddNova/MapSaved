@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>MapSaved</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>MapSaved</h1>
+      <p>La tua mappa privata dei posti da esplorare.</p>
+    </header>
+
+    <main>
+      <section class="controls">
+        <input id="searchInput" placeholder="Cerca luogo o nota..." />
+        <select id="exploredFilter">
+          <option value="">Tutti</option>
+          <option value="false">Da esplorare</option>
+          <option value="true">Già esplorati</option>
+        </select>
+        <button id="newPlaceBtn">+ Nuovo luogo</button>
+      </section>
+
+      <section id="map"></section>
+
+      <section id="list"></section>
+    </main>
+
+    <dialog id="placeDialog">
+      <form id="placeForm" method="dialog">
+        <h2 id="dialogTitle">Nuovo luogo</h2>
+        <input type="hidden" id="placeId" />
+        <label>Nome<input id="name" required /></label>
+        <label>Link Google Maps<input id="googleMapsUrl" placeholder="https://maps.google.com/..." /></label>
+        <div class="coords">
+          <label>Latitudine<input id="lat" type="number" step="any" required /></label>
+          <label>Longitudine<input id="lng" type="number" step="any" required /></label>
+        </div>
+        <label>Note<textarea id="notes"></textarea></label>
+        <label>Priorità
+          <select id="priority">
+            <option value="high">Alta</option>
+            <option value="medium" selected>Media</option>
+            <option value="low">Bassa</option>
+          </select>
+        </label>
+        <fieldset>
+          <legend>Voti (1-10)</legend>
+          <label>Generale<input id="overall" type="number" min="1" max="10" value="5" /></label>
+          <label>Fattibilità<input id="access" type="number" min="1" max="10" value="5" /></label>
+          <label>Integrità<input id="integrity" type="number" min="1" max="10" value="5" /></label>
+          <label>Notorietà<input id="notoriety" type="number" min="1" max="10" value="5" /></label>
+        </fieldset>
+        <label><input id="explored" type="checkbox" /> Già esplorato</label>
+        <label>Foto (URL, una per riga)<textarea id="photoUrls" placeholder="https://...\nhttps://..."></textarea></label>
+        <menu>
+          <button type="button" id="cancelBtn">Annulla</button>
+          <button type="submit">Salva</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js" type="module"></script>
+  </body>
+</html>
