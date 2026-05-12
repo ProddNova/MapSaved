@@ -11,27 +11,17 @@
     <header class="topbar">
       <div>
         <h1>MapSaved</h1>
-        <p class="subtitle">Mappa privata per obiettivi urbex imminenti</p>
+        <p class="subtitle">UI semplice e veloce per desktop e mobile</p>
       </div>
-      <button id="newPlaceBtn" class="primary">+ Nuovo</button>
+      <button id="newPlaceBtn" class="primary">+ Nuovo luogo</button>
     </header>
 
     <main class="layout">
       <section class="panel filters">
         <input id="searchInput" placeholder="Cerca luogo o nota..." />
-        <select id="exploredFilter">
-          <option value="">Tutti</option>
-          <option value="false">Da esplorare</option>
-          <option value="true">Esplorati</option>
-        </select>
-        <select id="sortBy">
-          <option value="updated">Più recenti</option>
-          <option value="distance">Più vicini</option>
-          <option value="overall">Voto generale</option>
-          <option value="priority">Priorità</option>
-        </select>
+        <select id="exploredFilter"><option value="">Tutti</option><option value="false">Da esplorare</option><option value="true">Esplorati</option></select>
+        <select id="sortBy"><option value="updated">Più recenti</option><option value="distance">Più vicini</option><option value="overall">Voto generale</option><option value="priority">Priorità</option></select>
       </section>
-
       <section class="stats" id="stats"></section>
       <section id="map" class="panel map"></section>
       <section id="list" class="list"></section>
@@ -40,14 +30,17 @@
     <dialog id="placeDialog">
       <form id="placeForm" method="dialog">
         <h2 id="dialogTitle">Nuovo luogo</h2>
+        <p class="help">Per aggiungere un luogo inserisci <b>coordinate</b> oppure <b>link Google Maps</b>.</p>
+        <p id="formError" class="error"></p>
         <input type="hidden" id="placeId" />
         <label>Nome<input id="name" required /></label>
-        <label>Link Google Maps<input id="googleMapsUrl" placeholder="Incolla link condiviso" /></label>
-        <button type="button" id="extractCoordsBtn">Estrai coordinate da link</button>
-        <div class="coords">
-          <label>Latitudine<input id="lat" type="number" step="any" required /></label>
-          <label>Longitudine<input id="lng" type="number" step="any" required /></label>
-        </div>
+        <label>Coordinate (decimali o DMS)
+          <input id="coordinateInput" placeholder='Es: 44.429930, 8.917107 oppure 44°25\'48.7"N 8°55\'04.4"E' />
+        </label>
+        <label>Link Google Maps (anche maps.app.goo.gl)
+          <input id="googleMapsUrl" placeholder="https://maps.app.goo.gl/..." />
+        </label>
+        <button type="button" id="extractCoordsBtn">Estrai coordinate dal link</button>
         <label>Note<textarea id="notes" placeholder="Parcheggio, recinzioni, orari, rischi..."></textarea></label>
         <label>Priorità
           <select id="priority"><option value="high">Alta</option><option value="medium" selected>Media</option><option value="low">Bassa</option></select>
@@ -60,7 +53,6 @@
           <label>Notorietà<input id="notoriety" type="range" min="1" max="10" value="5" /></label>
         </fieldset>
         <label><input id="explored" type="checkbox" /> Già esplorato</label>
-        <label>Foto (URL, una per riga)<textarea id="photoUrls"></textarea></label>
         <menu><button type="button" id="cancelBtn">Annulla</button><button class="primary" type="submit">Salva</button></menu>
       </form>
     </dialog>
