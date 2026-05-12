@@ -23,6 +23,7 @@ const haversineKm = (a, b, c, d) => {
 
 const eta = (km) => `${Math.round((km / 65) * 60)} min auto`;
 const prioScore = { high: 3, medium: 2, low: 1 };
+const priorityLabel = { high: 'Alta priorità', medium: 'Media priorità', low: 'Bassa priorità' };
 
 const dmsToDecimal = (deg, min, sec, hemi) => {
   const sign = hemi === 'S' || hemi === 'W' ? -1 : 1;
@@ -68,7 +69,8 @@ async function api(path = '', options = {}) {
 function renderStats(places) {
   const explored = places.filter((p) => p.explored).length;
   const avg = places.length ? (places.reduce((s, p) => s + (p.ratings?.overall || 0), 0) / places.length).toFixed(1) : '0.0';
-  $('#stats').innerHTML = `<div class="stat"><div>Totali</div><b>${places.length}</b></div><div class="stat"><div>Esplorati</div><b>${explored}</b></div><div class="stat"><div>Media ⭐</div><b>${avg}</b></div>`;
+  const hot = [...places].sort((a, b) => (b.ratings?.overall || 0) - (a.ratings?.overall || 0))[0];
+  $('#stats').innerHTML = `<div class="stat"><div>Totali</div><b>${places.length}</b></div><div class="stat"><div>Esplorati</div><b>${explored}</b></div><div class="stat"><div>Media ⭐</div><b>${avg}</b></div>${hot ? `<div class="stat" style="grid-column:1/-1;text-align:left"><div>Consiglio rapido</div><b>🎯 ${hot.name}</b><div class="meta">Miglior voto: ${hot.ratings?.overall || '-'} /10</div></div>` : ''}`;
 }
 
 function card(p) {
@@ -91,9 +93,26 @@ function sortPlaces(places) {
   return sorted;
 }
 
+function markerIcon(p) {
+  const emoji = p.explored ? '✅' : p.priority === 'high' ? '🔥' : p.priority === 'low' ? '🌿' : '📍';
+  return L.divIcon({
+    className: '',
+    html: `<div class="map-pin ${p.priority} ${p.explored ? 'explored' : ''}"><span>${emoji}</span></div>`,
+    iconSize: [34, 34],
+    iconAnchor: [17, 30],
+    popupAnchor: [0, -28]
+  });
+}
+
+function popupContent(p) {
+  const maps = p.googleMapsUrl || `https://maps.google.com/?q=${p.location.lat},${p.location.lng}`;
+  const status = p.explored ? 'Esplorato' : 'Da esplorare';
+  return `<div class="popup"><h4>${p.name}</h4><div class="row">${status} · ⭐ ${p.ratings?.overall || '-'} /10</div><div class="row">🚪 ${p.ratings?.access || '-'} · 🧱 ${p.ratings?.integrity || '-'} · 👀 ${p.ratings?.notoriety || '-'}</div><div class="row"><span class="badge">${priorityLabel[p.priority] || p.priority}</span></div><div class="row">${p.notes || 'Nessuna nota inserita.'}</div><a target="_blank" href="${maps}">Apri in Google Maps ↗</a></div>`;
+}
+
 function draw(places) {
   markers.forEach((m) => map.removeLayer(m));
-  markers = places.map((p) => L.marker([p.location.lat, p.location.lng]).addTo(map).bindPopup(`<b>${p.name}</b><br>${p.explored ? 'Esplorato' : 'Da esplorare'}`));
+  markers = places.map((p) => L.marker([p.location.lat, p.location.lng], { icon: markerIcon(p) }).addTo(map).bindPopup(popupContent(p)));
   if (places.length) {
     const bounds = L.latLngBounds(places.map((p) => [p.location.lat, p.location.lng]));
     map.fitBounds(bounds.pad(0.2), { maxZoom: 15 });
@@ -197,7 +216,6 @@ map.on('click', (e) => {
 });
 
 load();
-
 
 $('#togglePanelBtn').addEventListener('click', () => {
   $('#controlPanel').classList.toggle('is-collapsed');
