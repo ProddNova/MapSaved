@@ -1,6 +1,10 @@
 const home = { lat: 44.4056, lng: 8.9463, label: 'Genova' };
-const map = L.map('map').setView([home.lat, home.lng], 8);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+const map = L.map('map', { zoomControl: false }).setView([home.lat, home.lng], 8);
+L.control.zoom({ position: 'bottomright' }).addTo(map);
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+  maxZoom: 19,
+  attribution: '&copy; Esri, Maxar, Earthstar Geographics'
+}).addTo(map);
 
 const $ = (s) => document.querySelector(s);
 const listEl = $('#list');
@@ -90,6 +94,10 @@ function sortPlaces(places) {
 function draw(places) {
   markers.forEach((m) => map.removeLayer(m));
   markers = places.map((p) => L.marker([p.location.lat, p.location.lng]).addTo(map).bindPopup(`<b>${p.name}</b><br>${p.explored ? 'Esplorato' : 'Da esplorare'}`));
+  if (places.length) {
+    const bounds = L.latLngBounds(places.map((p) => [p.location.lat, p.location.lng]));
+    map.fitBounds(bounds.pad(0.2), { maxZoom: 15 });
+  }
   renderStats(places);
   listEl.innerHTML = places.length ? sortPlaces(places).map(card).join('') : '<div class="panel">Nessun luogo</div>';
 }
@@ -189,3 +197,9 @@ map.on('click', (e) => {
 });
 
 load();
+
+
+$('#togglePanelBtn').addEventListener('click', () => {
+  $('#controlPanel').classList.toggle('is-collapsed');
+  setTimeout(() => map.invalidateSize(), 260);
+});
