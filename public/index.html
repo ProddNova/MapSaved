@@ -8,24 +8,28 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header class="topbar">
+    <section id="map" class="map-canvas"></section>
+
+    <header class="glass topbar">
       <div>
         <h1>MapSaved</h1>
-        <p class="subtitle">UI semplice e veloce per desktop e mobile</p>
+        <p class="subtitle">Dashboard neutra, pulita e orientata alla mappa</p>
       </div>
-      <button id="newPlaceBtn" class="primary">+ Nuovo luogo</button>
+      <div class="topbar-actions">
+        <button id="togglePanelBtn">Pannello</button>
+        <button id="newPlaceBtn" class="primary">+ Nuovo luogo</button>
+      </div>
     </header>
 
-    <main class="layout">
-      <section class="panel filters">
+    <aside id="controlPanel" class="glass control-panel">
+      <section class="filters">
         <input id="searchInput" placeholder="Cerca luogo o nota..." />
         <select id="exploredFilter"><option value="">Tutti</option><option value="false">Da esplorare</option><option value="true">Esplorati</option></select>
         <select id="sortBy"><option value="updated">Più recenti</option><option value="distance">Più vicini</option><option value="overall">Voto generale</option><option value="priority">Priorità</option></select>
       </section>
       <section class="stats" id="stats"></section>
-      <section id="map" class="panel map"></section>
       <section id="list" class="list"></section>
-    </main>
+    </aside>
 
     <dialog id="placeDialog">
       <form id="placeForm" method="dialog">
